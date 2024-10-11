@@ -28,6 +28,8 @@ services:
       - postgres
     labels:
         - traefik.http.routers.all-in-one.rule=Host(`demo.ticketeiro.com.br`)
+        - traefik.http.routers.all-in-one.tls=true
+        - traefik.http.routers.all-in-one.tls.certresolver=myresolver
         - traefik.http.services.all-in-one.loadbalancer.server.port=80
 
   postgres:
