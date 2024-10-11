@@ -4,6 +4,9 @@ services:
       context: ./../../
       dockerfile: Dockerfile.all-in-one
     container_name: all-in-one
+    networks:
+      - traefik_network
+    #   - hievent_network
     ports:
       - "8123:80"
     environment:
@@ -23,10 +26,16 @@ services:
 
     depends_on:
       - postgres
+    labels:
+        - traefik.http.routers.all-in-one.rule=Host(`demo.ticketeiro.com.br`)
+        - traefik.http.services.all-in-one.loadbalancer.server.port=80
 
   postgres:
     image: postgres:latest
-    container_name: postgres
+    container_name: postgres_hievent
+    networks:
+        # - hievent_network
+        - traefik_network
     environment:
       POSTGRES_DB: hi-events
       POSTGRES_USER: postgres
@@ -36,3 +45,10 @@ services:
 
 volumes:
   pgdata:
+
+networks:
+    traefik_network:
+        external: true
+  
+
+
